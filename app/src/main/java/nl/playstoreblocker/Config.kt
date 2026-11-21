@@ -8,6 +8,9 @@ object Config {
     /** Pakketten die alleen binnen een ontgrendelvenster open mogen. */
     val BLOCKED_PACKAGES: Set<String> = setOf(PLAY_STORE_PACKAGE)
 
-    /** Duur van het ontgrendelvenster; instelbaar via unlockMinutes in blocker.properties. */
-    val UNLOCK_DURATION_MS: Long = BuildConfig.UNLOCK_MINUTES * 60_000L
+    /** Standaardduur in minuten; instelbaar via unlockMinutes in blocker.properties. */
+    const val DEFAULT_UNLOCK_MINUTES = BuildConfig.UNLOCK_MINUTES
+
+    /** Maximaal aantal minuten dat de ouder kan invullen op het pincodescherm. */
+    const val MAX_UNLOCK_MINUTES = 180
 }

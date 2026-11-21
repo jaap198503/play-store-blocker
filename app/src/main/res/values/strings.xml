@@ -7,6 +7,7 @@
     <string name="block_title">De Play Store is dicht</string>
     <string name="block_subtitle">Vraag een ouder om de pincode.</string>
     <string name="block_pin_hint">Pincode</string>
+    <string name="block_minutes_label">Aantal minuten (1 tot 180)</string>
     <string name="block_unlock">Openen</string>
     <string name="block_back">Terug</string>
     <string name="block_wrong_pin">Onjuiste pincode</string>

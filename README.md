@@ -9,7 +9,8 @@ Gebouwd voor een Samsung Galaxy Tab A9 met een Family Link-kinderaccount. Family
 ## Hoe het werkt
 
 - Een `AccessibilityService` luistert naar `TYPE_WINDOW_STATE_CHANGED`. Komt `com.android.vending` voorop en is er geen actief ontgrendelvenster, dan gaat de tablet naar het startscherm en verschijnt een pincodescherm.
-- Pincode goed: de Play Store start en het ontgrendelvenster loopt. Het venster gebruikt `SystemClock.elapsedRealtime()` plus de boot-teller, dus klok verzetten of herstarten helpt niet om het te verlengen.
+- Op het pincodescherm staat ook een veld **Aantal minuten** (standaard 10, maximaal 180). Het kind vraagt om een aantal minuten, de ouder vult dat in en voert de pincode in. Een leeg of ongeldig veld valt terug op de standaard.
+- Pincode goed: de Play Store start en het ontgrendelvenster loopt voor het ingevulde aantal minuten. Het venster gebruikt `SystemClock.elapsedRealtime()` plus de boot-teller, dus klok verzetten of herstarten helpt niet om het te verlengen.
 - Na afloop van het venster controleert de service wat voorop staat en sluit de Play Store als dat nog nodig is.
 - Na 5 foute pogingen volgt een wachttijd die steeds verdubbelt (30 s tot maximaal 10 min).
 - De pincode staat nergens. In de app zit alleen een salted PBKDF2-hash (SHA-256, 120.000 iteraties).
@@ -54,7 +55,7 @@ Op de ontwikkellaptop staat alles in `C:\Users\JaapScheper\android-tools` (`jdk1
    ```
 5. Maak `blocker.properties` met je pincode (zie hieronder).
 
-## Pincode of duur wijzigen
+## Pincode of standaardduur wijzigen
 
 Open PowerShell in de projectmap en draai:
 
@@ -62,7 +63,7 @@ Open PowerShell in de projectmap en draai:
 powershell -File tools/New-PinHash.ps1
 ```
 
-Het script vraagt de pincode verborgen (4 tot 12 cijfers) en schrijft een nieuwe `blocker.properties`. Een andere duur zet je met `-UnlockMinutes`:
+Het script vraagt de pincode verborgen (4 tot 12 cijfers) en schrijft een nieuwe `blocker.properties`. Een andere **standaardduur** (de beginwaarde van het minutenveld) zet je met `-UnlockMinutes`:
 
 ```powershell
 powershell -File tools/New-PinHash.ps1 -UnlockMinutes 15
@@ -157,13 +158,14 @@ Anders legt Samsung de service na verloop van tijd stil.
 
 1. Open de **Play Store** op de tablet. Je gaat meteen naar het startscherm en het pincodescherm "De Play Store is dicht" verschijnt.
 2. Typ een **foute pincode** en tik op Openen. Je ziet "Onjuiste pincode".
-3. Typ de **juiste pincode**. De Play Store gaat open.
-4. Laat de Play Store **10 minuten** open (of de duur die je hebt ingesteld). Daarna hoort hij zichzelf te sluiten en verschijnt het pincodescherm weer.
-5. Optioneel: controleer de wachttijd. Typ 5 keer een foute pincode. Je krijgt "Te vaak geprobeerd. Wacht 30 seconden."
+3. Controleer dat het veld **Aantal minuten** op de standaard staat (10). Pas het aan als je een andere duur wilt, bijvoorbeeld 2 voor een snelle test.
+4. Typ de **juiste pincode**. De Play Store gaat open.
+5. Laat de Play Store open voor het ingevulde aantal minuten. Daarna hoort hij zichzelf te sluiten en verschijnt het pincodescherm weer. Test dit met 1 of 2 minuten, dat scheelt wachttijd.
+6. Optioneel: controleer de wachttijd. Typ 5 keer een foute pincode. Je krijgt "Te vaak geprobeerd. Wacht 30 seconden."
 
 Meekijken kan met `adb logcat -s PSBlocker:V`. Je ziet regels als `blocking: window event from com.android.vending` en `unlock window expired`.
 
-> Tijdens de eerste uitrol is stap 1 tot en met 3 getest. Het sluiten na 10 minuten en de wachttijd na 5 foute pogingen zijn nog niet op de tablet gecontroleerd, dus neem stap 4 en 5 serieus mee.
+> Tijdens de eerste uitrol zijn het blokkeren en de juiste pincode getest. Het sluiten na afloop van het venster, het minutenveld en de wachttijd na 5 foute pogingen zijn nog niet op de tablet gecontroleerd, dus neem stap 3, 5 en 6 serieus mee.
 
 ### 7. Afronden
 

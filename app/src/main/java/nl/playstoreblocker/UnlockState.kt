@@ -16,9 +16,12 @@ object UnlockState {
     private const val PREFS = "unlock_state"
     private const val KEY_UNLOCKED_AT = "unlocked_at_elapsed"
     private const val KEY_BOOT_COUNT = "boot_count"
+    private const val KEY_DURATION_MS = "duration_ms"
 
-    fun unlock(context: Context) {
+    fun unlock(context: Context, minutes: Int) {
+        val clamped = minutes.coerceIn(1, Config.MAX_UNLOCK_MINUTES)
         prefs(context).edit()
+            .putLong(KEY_DURATION_MS, clamped * 60_000L)
             .putLong(KEY_UNLOCKED_AT, SystemClock.elapsedRealtime())
             .putInt(KEY_BOOT_COUNT, bootCount(context))
             .commit()
@@ -33,7 +36,8 @@ object UnlockState {
 
         val elapsed = SystemClock.elapsedRealtime() - unlockedAt
         if (elapsed < 0L) return 0L
-        return (Config.UNLOCK_DURATION_MS - elapsed).coerceAtLeast(0L)
+        val duration = prefs.getLong(KEY_DURATION_MS, 0L)
+        return (duration - elapsed).coerceAtLeast(0L)
     }
 
     fun isUnlocked(context: Context): Boolean = remainingMs(context) > 0L

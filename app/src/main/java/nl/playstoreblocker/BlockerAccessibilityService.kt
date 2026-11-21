@@ -24,7 +24,7 @@ class BlockerAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        Log.i(TAG, "service connected; unlock window = ${BuildConfig.UNLOCK_MINUTES} min")
+        Log.i(TAG, "service connected; default unlock window = ${Config.DEFAULT_UNLOCK_MINUTES} min")
         // De service kan herstarten terwijl een ontgrendelvenster nog loopt.
         scheduleExpiryCheck()
     }

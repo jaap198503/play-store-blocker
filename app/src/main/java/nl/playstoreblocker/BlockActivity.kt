@@ -15,6 +15,7 @@ import kotlin.math.ceil
 class BlockActivity : Activity() {
 
     private lateinit var pinInput: EditText
+    private lateinit var minutesInput: EditText
     private lateinit var errorText: TextView
     private lateinit var unlockButton: Button
 
@@ -26,12 +27,14 @@ class BlockActivity : Activity() {
         setContentView(R.layout.activity_block)
 
         pinInput = findViewById(R.id.pin_input)
+        minutesInput = findViewById(R.id.minutes_input)
         errorText = findViewById(R.id.pin_error)
         unlockButton = findViewById(R.id.unlock_button)
 
+        minutesInput.setText(Config.DEFAULT_UNLOCK_MINUTES.toString())
         unlockButton.setOnClickListener { submit() }
         findViewById<Button>(R.id.back_button).setOnClickListener { finish() }
-        pinInput.setOnEditorActionListener { _, actionId, _ ->
+        minutesInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submit()
                 true
@@ -50,22 +53,26 @@ class BlockActivity : Activity() {
         val pin = pinInput.text.toString()
         if (pin.isEmpty()) return
 
+        // Leeg of ongeldig veld valt terug op de standaardduur; te hoge waarden worden afgekapt.
+        val minutes = (minutesInput.text.toString().toIntOrNull() ?: Config.DEFAULT_UNLOCK_MINUTES)
+            .coerceIn(1, Config.MAX_UNLOCK_MINUTES)
+
         unlockButton.isEnabled = false
         worker.execute {
             val correct = PinVerifier.verify(pin)
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 unlockButton.isEnabled = true
-                if (correct) onCorrectPin() else onWrongPin()
+                if (correct) onCorrectPin(minutes) else onWrongPin()
             }
         }
     }
 
-    private fun onCorrectPin() {
+    private fun onCorrectPin(minutes: Int) {
         PinAttempts.reset()
-        UnlockState.unlock(this)
+        UnlockState.unlock(this, minutes)
         BlockerAccessibilityService.instance?.onUnlocked()
-        Log.i(Config.TAG, "correct pin; play store open for ${BuildConfig.UNLOCK_MINUTES} min")
+        Log.i(Config.TAG, "correct pin; play store open for $minutes min")
 
         val launch = packageManager.getLaunchIntentForPackage(Config.PLAY_STORE_PACKAGE)
         if (launch != null) {
