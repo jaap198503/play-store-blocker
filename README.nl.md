@@ -156,8 +156,8 @@ Alle teksten staan in `app/src/main/res/values/strings.xml` (Engels, de standaar
 
 ## Beperkingen
 
-- **De service kan worden uitgezet.** Een kind kan Instellingen > Toegankelijkheid openen en de service uitzetten, of de app verwijderen. Of Family Link dat tegenhoudt, is niet getest.
+- **De service kan worden uitgezet.** Een kind kan Instellingen > Toegankelijkheid openen en de service uitzetten, de app geforceerd stoppen (Android zet de service dan ook uit), of de app verwijderen. Of Family Link dat tegenhoudt, is niet getest.
 - **Geen Device Admin.** Verwijderen is daarom niet extra moeilijk gemaakt.
 - **Galaxy Store** (`com.sec.android.app.samsungapps`) is een tweede route om apps te installeren en wordt **niet** geblokkeerd. Voeg hem toe aan `BLOCKED_PACKAGES` in `Config.kt` als je dat wilt.
 - Een korte numerieke pincode is met brute kracht te raden door wie de privéopslag van de app kan lezen (alleen mogelijk op een gerootte telefoon). Gebruik een langere pincode als dat voor je telt.
-- **Tot nu toe getest** op een Samsung Galaxy Tab A9 (Android 16): blokkeren, de juiste pincode invoeren en de Play Store openen. Het sluiten na afloop van het venster, de wachttijd na 5 foute pogingen en de andere talen zijn nog niet op een toestel gecontroleerd.
+- **Tot nu toe getest** op een Samsung Galaxy Tab A9 (Android 16): blokkeren, de juiste en een foute pincode invoeren, de Play Store openen, hem weer sluiten na afloop van het venster, de wachttijd na 5 foute pogingen, het wijzigen van pincode en standaardminuten, alle vijf de talen en een herstart van de tablet (de service verbindt zelf weer en de Play Store is weer dicht). Niet getest: de eerste start zonder pincode, en of Family Link een kind tegenhoudt om de service uit te zetten.

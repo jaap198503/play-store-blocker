@@ -28,6 +28,7 @@ open class BlockActivity : Activity() {
 
     // PBKDF2 duurt even; niet op de hoofdthread.
     private val worker = Executors.newSingleThreadExecutor()
+    private var verifying = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,8 @@ open class BlockActivity : Activity() {
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
         }
-        minutesInput.setOnEditorActionListener { _, actionId, _ ->
+        // De pincode is het laatste veld: "Klaar" op het toetsenbord verstuurt het formulier.
+        pinInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submit()
                 true
@@ -66,6 +68,9 @@ open class BlockActivity : Activity() {
     }
 
     private fun submit() {
+        // Eén Enter/Klaar kan twee keer binnenkomen; een tweede poging tijdens de controle zou een
+        // foute pincode dubbel tellen.
+        if (verifying) return
         val lockedMs = PinAttempts.lockedForMs()
         if (lockedMs > 0L) {
             showError(lockedOutMessage(lockedMs))
@@ -86,11 +91,13 @@ open class BlockActivity : Activity() {
         val minutes = (minutesInput.text.toString().toIntOrNull() ?: PinStore.defaultMinutes(this))
             .coerceIn(1, Config.MAX_UNLOCK_MINUTES)
 
+        verifying = true
         unlockButton.isEnabled = false
         val appContext = applicationContext
         worker.execute {
             val correct = PinStore.matches(appContext, pin)
             runOnUiThread {
+                verifying = false
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 unlockButton.isEnabled = true
                 if (correct) onCorrectPin(minutes) else onWrongPin()

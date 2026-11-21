@@ -156,8 +156,8 @@ All texts are in `app/src/main/res/values/strings.xml` (English, the default). C
 
 ## Limitations
 
-- **The service can be switched off.** A child can open Settings > Accessibility and switch the service off, or uninstall the app. Whether Family Link prevents that has not been tested.
+- **The service can be switched off.** A child can open Settings > Accessibility and switch the service off, force-stop the app (Android then switches the service off too), or uninstall the app. Whether Family Link prevents that has not been tested.
 - **No Device Admin.** Uninstalling is therefore not made any harder.
 - **Galaxy Store** (`com.sec.android.app.samsungapps`) is a second way to install apps and is **not** blocked. Add it to `BLOCKED_PACKAGES` in `Config.kt` if you want that.
 - A short numeric PIN can be guessed by brute force by someone who can read the app's private storage (only possible on a rooted device). Use a longer PIN if that matters to you.
-- **Tested so far** on a Samsung Galaxy Tab A9 (Android 16): blocking, entering the correct PIN and opening the Play Store. Closing after the window ends, the waiting time after 5 wrong attempts and the other languages have not been verified on a device yet.
+- **Tested so far** on a Samsung Galaxy Tab A9 (Android 16): blocking, entering the correct and wrong PIN, opening the Play Store, closing it again when the window ends, the waiting time after 5 wrong attempts, changing the PIN and default minutes, all five languages, and a tablet restart (the service reconnects by itself and the Play Store is closed again). Not tested: the first start without a PIN, and whether Family Link stops a child from switching the service off.

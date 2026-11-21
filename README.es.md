@@ -156,8 +156,8 @@ Todos los textos están en `app/src/main/res/values/strings.xml` (inglés, el pr
 
 ## Limitaciones
 
-- **El servicio se puede desactivar.** Un niño puede abrir Ajustes > Accesibilidad y desactivar el servicio, o desinstalar la aplicación. No se ha probado si Family Link lo impide.
+- **El servicio se puede desactivar.** Un niño puede abrir Ajustes > Accesibilidad y desactivar el servicio, forzar la detención de la aplicación (Android también desactiva entonces el servicio) o desinstalar la aplicación. No se ha probado si Family Link lo impide.
 - **Sin Device Admin.** Por tanto, desinstalar no se hace más difícil.
 - **Galaxy Store** (`com.sec.android.app.samsungapps`) es una segunda vía para instalar aplicaciones y **no** está bloqueada. Añádela a `BLOCKED_PACKAGES` en `Config.kt` si lo deseas.
 - Un PIN numérico corto se puede adivinar por fuerza bruta si alguien puede leer el almacenamiento privado de la aplicación (solo posible en un dispositivo con root). Usa un PIN más largo si eso te importa.
-- **Probado hasta ahora** en una Samsung Galaxy Tab A9 (Android 16): bloqueo, introducción del PIN correcto y apertura de Play Store. El cierre al terminar la ventana, el tiempo de espera tras 5 intentos fallidos y los demás idiomas aún no se han comprobado en un dispositivo.
+- **Probado hasta ahora** en una Samsung Galaxy Tab A9 (Android 16): bloqueo, introducción de un PIN correcto y de uno incorrecto, apertura de Play Store, cierre de nuevo al terminar la ventana, tiempo de espera tras 5 intentos fallidos, cambio del PIN y de los minutos predeterminados, los cinco idiomas y un reinicio de la tableta (el servicio se reconecta solo y Play Store vuelve a estar cerrada). No probado: el primer inicio sin PIN y si Family Link impide que un niño desactive el servicio.

@@ -156,8 +156,8 @@ Alle Texte stehen in `app/src/main/res/values/strings.xml` (Englisch, der Standa
 
 ## Einschränkungen
 
-- **Der Dienst kann ausgeschaltet werden.** Ein Kind kann Einstellungen > Bedienungshilfen öffnen und den Dienst ausschalten oder die App deinstallieren. Ob Family Link das verhindert, wurde nicht getestet.
+- **Der Dienst kann ausgeschaltet werden.** Ein Kind kann Einstellungen > Bedienungshilfen öffnen und den Dienst ausschalten, die App zwangsweise beenden (Android schaltet den Dienst dann ebenfalls aus) oder die App deinstallieren. Ob Family Link das verhindert, wurde nicht getestet.
 - **Kein Device Admin.** Das Deinstallieren wird daher nicht zusätzlich erschwert.
 - Der **Galaxy Store** (`com.sec.android.app.samsungapps`) ist ein zweiter Weg, Apps zu installieren, und wird **nicht** gesperrt. Füge ihn zu `BLOCKED_PACKAGES` in `Config.kt` hinzu, wenn du das willst.
 - Ein kurzer numerischer PIN-Code lässt sich per Brute-Force erraten, wenn jemand den privaten Speicher der App lesen kann (nur auf einem gerooteten Gerät möglich). Nimm einen längeren PIN-Code, wenn dir das wichtig ist.
-- **Bisher getestet** auf einem Samsung Galaxy Tab A9 (Android 16): Sperren, Eingabe des richtigen PIN-Codes und Öffnen des Play Stores. Das Schließen nach Ablauf des Fensters, die Wartezeit nach 5 falschen Versuchen und die anderen Sprachen wurden noch nicht auf einem Gerät geprüft.
+- **Bisher getestet** auf einem Samsung Galaxy Tab A9 (Android 16): Sperren, Eingabe des richtigen und eines falschen PIN-Codes, Öffnen des Play Stores, erneutes Schließen nach Ablauf des Fensters, die Wartezeit nach 5 falschen Versuchen, Ändern von PIN-Code und Standardminuten, alle fünf Sprachen und ein Neustart des Tablets (der Dienst verbindet sich von selbst wieder und der Play Store ist wieder gesperrt). Nicht getestet: der erste Start ohne PIN-Code und ob Family Link ein Kind daran hindert, den Dienst auszuschalten.

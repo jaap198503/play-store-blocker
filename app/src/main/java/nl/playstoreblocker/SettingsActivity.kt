@@ -14,8 +14,9 @@ import java.util.concurrent.Executors
 import kotlin.math.ceil
 
 /**
- * Startscherm van de app (voor de ouder): status van pincode en service, snelkoppelingen naar de
- * juiste Android-instellingen, en het instellen of wijzigen van de pincode en standaardduur.
+ * Instellingenscherm (voor de ouder, bereikbaar vanuit MainActivity): status van pincode en service,
+ * snelkoppelingen naar de juiste Android-instellingen, en het instellen of wijzigen van de pincode
+ * en standaardduur.
  * Wijzigen kan alleen met de huidige pincode.
  */
 class SettingsActivity : Activity() {
@@ -58,6 +59,7 @@ class SettingsActivity : Activity() {
             )
         }
         saveButton.setOnClickListener { save() }
+        findViewById<Button>(R.id.back_button).setOnClickListener { finish() }
     }
 
     override fun onResume() {

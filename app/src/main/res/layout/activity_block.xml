@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Gedeeld door het blokkeerscherm (BlockActivity) en het hoofdscherm van de ouder (MainActivity). -->
+<!--
+  Gedeeld door het blokkeerscherm (BlockActivity) en het hoofdscherm van de ouder (MainActivity).
+  Bovenaan staat wat altijd gebruikt wordt (minuten, pincode, Openen); de zelden gebruikte knoppen
+  (Instellingen, Terug) zitten onderaan het scherm.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/block_title"
@@ -18,37 +23,22 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/block_title"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/block_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:text="@string/block_subtitle"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/pin_input"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center"
-            android:hint="@string/block_pin_hint"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="numberPassword"
-            android:maxLength="12"
-            android:nextFocusDown="@+id/minutes_input"
-            android:singleLine="true"
-            android:textSize="28sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:text="@string/block_minutes_label"
             android:textSize="16sp" />
 
@@ -57,18 +47,35 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:imeOptions="actionDone"
+            android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="number"
             android:maxLength="3"
+            android:nextFocusDown="@+id/pin_input"
             android:singleLine="true"
             android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/pin_input"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:hint="@string/block_pin_hint"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="numberPassword"
+            android:maxLength="12"
+            android:singleLine="true"
+            android:textSize="28sp">
+            <requestFocus />
+        </EditText>
 
         <TextView
             android:id="@+id/pin_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             android:textColor="#C62828"
             android:textSize="16sp"
@@ -78,14 +85,21 @@
             android:id="@+id/unlock_button"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/block_unlock" />
+
+        <!-- Duwt de zelden gebruikte knoppen naar de onderkant. -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/settings_button"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="@string/main_settings"
             android:visibility="gone" />
 
@@ -94,7 +108,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/block_back" />
     </LinearLayout>
 </ScrollView>
