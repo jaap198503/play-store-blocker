@@ -51,7 +51,11 @@ class BlockActivity : Activity() {
             return
         }
         val pin = pinInput.text.toString()
-        if (pin.isEmpty()) return
+        Log.i(Config.TAG, "submit; pin length=${pin.length}")
+        if (pin.isEmpty()) {
+            showError(getString(R.string.block_pin_empty))
+            return
+        }
 
         // Leeg of ongeldig veld valt terug op de standaardduur; te hoge waarden worden afgekapt.
         val minutes = (minutesInput.text.toString().toIntOrNull() ?: Config.DEFAULT_UNLOCK_MINUTES)

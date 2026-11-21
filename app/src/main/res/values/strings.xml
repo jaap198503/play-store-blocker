@@ -10,6 +10,7 @@
     <string name="block_minutes_label">Aantal minuten (1 tot 180)</string>
     <string name="block_unlock">Openen</string>
     <string name="block_back">Terug</string>
+    <string name="block_pin_empty">Vul eerst de pincode in</string>
     <string name="block_wrong_pin">Onjuiste pincode</string>
     <string name="block_locked_out">Te vaak geprobeerd. Wacht %1$d seconden.</string>
 </resources>
