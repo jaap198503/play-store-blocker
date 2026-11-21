@@ -1,0 +1,14 @@
+# Lokale configuratie: pincode-hash en SDK-pad horen niet in git
+blocker.properties
+local.properties
+
+# Gradle / Android
+.gradle/
+build/
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.iml
+.vscode/

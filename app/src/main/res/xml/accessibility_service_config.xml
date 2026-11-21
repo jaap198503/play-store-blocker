@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Alleen venster-wissels (TYPE_WINDOW_STATE_CHANGED). Geen packageNames-filter: de service moet
+  ook weten wanneer een ander venster het overneemt. canRetrieveWindowContent is nodig om bij het
+  verlopen van het ontgrendelvenster te kunnen zien welke app op dat moment voorop staat.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/service_description"
+    android:notificationTimeout="50" />
