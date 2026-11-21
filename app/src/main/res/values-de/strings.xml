@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Play-Store-Sperre</string>
+    <string name="service_label">Play-Store-Sperre</string>
+    <string name="service_description">Hält den Google Play Store geschlossen. Er öffnet sich nur vorübergehend mit dem PIN-Code eines Elternteils.</string>
+
+    <string name="block_title">Der Play Store ist gesperrt</string>
+    <string name="block_subtitle">Frag ein Elternteil nach dem PIN-Code.</string>
+    <string name="block_pin_hint">PIN-Code</string>
+    <string name="block_minutes_label">Anzahl Minuten (1 bis 180)</string>
+    <string name="block_unlock">Öffnen</string>
+    <string name="block_back">Zurück</string>
+    <string name="block_pin_empty">Gib zuerst den PIN-Code ein</string>
+    <string name="block_wrong_pin">Falscher PIN-Code</string>
+    <string name="block_locked_out">Zu viele Versuche. Bitte %1$d Sekunden warten.</string>
+</resources>

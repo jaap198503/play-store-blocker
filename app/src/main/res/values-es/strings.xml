@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bloqueo de Play Store</string>
+    <string name="service_label">Bloqueo de Play Store</string>
+    <string name="service_description">Mantiene cerrada Google Play Store. Solo se abre temporalmente con el código PIN de un padre o una madre.</string>
+
+    <string name="block_title">Play Store está cerrada</string>
+    <string name="block_subtitle">Pide el código PIN a un adulto.</string>
+    <string name="block_pin_hint">Código PIN</string>
+    <string name="block_minutes_label">Número de minutos (1 a 180)</string>
+    <string name="block_unlock">Abrir</string>
+    <string name="block_back">Atrás</string>
+    <string name="block_pin_empty">Introduce primero el código PIN</string>
+    <string name="block_wrong_pin">Código PIN incorrecto</string>
+    <string name="block_locked_out">Demasiados intentos. Espera %1$d segundos.</string>
+</resources>

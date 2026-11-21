@@ -14,6 +14,7 @@ Gebouwd voor een Samsung Galaxy Tab A9 met een Family Link-kinderaccount. Family
 - Na afloop van het venster controleert de service wat voorop staat en sluit de Play Store als dat nog nodig is.
 - Na 5 foute pogingen volgt een wachttijd die steeds verdubbelt (30 s tot maximaal 10 min).
 - De pincode staat nergens. In de app zit alleen een salted PBKDF2-hash (SHA-256, 120.000 iteraties).
+- **Talen:** de app volgt automatisch de taal van de tablet. De standaardtaal is Engels. Vertalingen zijn er voor Nederlands, Duits, Frans en Spaans. In de teststappen hieronder staan de Nederlandse teksten; op een Engelstalige tablet zie je de Engelse (bijvoorbeeld "Open" in plaats van "Openen").
 - De app heeft geen icoon in het appscherm. Je vindt hem onder Instellingen > Toegankelijkheid en onder Instellingen > Apps.
 
 ## Indeling
@@ -54,6 +55,10 @@ Op de ontwikkellaptop staat alles in `C:\Users\JaapScheper\android-tools` (`jdk1
    . .\tools\env.ps1
    ```
 5. Maak `blocker.properties` met je pincode (zie hieronder).
+
+## Een taal toevoegen
+
+Alle teksten staan in `app/src/main/res/values/strings.xml` (Engels, de standaard). Kopieer dat bestand naar `app/src/main/res/values-<taalcode>/strings.xml` (bijvoorbeeld `values-it` voor Italiaans), vertaal de waarden en laat de namen ongewijzigd. Houd `%1$d` en `\'` zoals ze staan. Bouw en installeer opnieuw; Android kiest zelf de taal van de tablet en valt terug op Engels als een taal ontbreekt. Bij Samsung-tablets is de Service-naam onder Toegankelijkheid ook vertaald.
 
 ## Pincode of standaardduur wijzigen
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Play Store-slot</string>
+    <string name="service_label">Play Store-slot</string>
+    <string name="service_description">Houdt de Google Play Store dicht. Alleen met de pincode van een ouder gaat hij tijdelijk open.</string>
+
+    <string name="block_title">De Play Store is dicht</string>
+    <string name="block_subtitle">Vraag een ouder om de pincode.</string>
+    <string name="block_pin_hint">Pincode</string>
+    <string name="block_minutes_label">Aantal minuten (1 tot 180)</string>
+    <string name="block_unlock">Openen</string>
+    <string name="block_back">Terug</string>
+    <string name="block_pin_empty">Vul eerst de pincode in</string>
+    <string name="block_wrong_pin">Onjuiste pincode</string>
+    <string name="block_locked_out">Te vaak geprobeerd. Wacht %1$d seconden.</string>
+</resources>

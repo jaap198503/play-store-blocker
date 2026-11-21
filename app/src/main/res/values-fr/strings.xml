@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Verrou Play Store</string>
+    <string name="service_label">Verrou Play Store</string>
+    <string name="service_description">Maintient le Google Play Store fermé. Il ne s\'ouvre temporairement qu\'avec le code PIN d\'un parent.</string>
+
+    <string name="block_title">Le Play Store est fermé</string>
+    <string name="block_subtitle">Demande le code PIN à un parent.</string>
+    <string name="block_pin_hint">Code PIN</string>
+    <string name="block_minutes_label">Nombre de minutes (1 à 180)</string>
+    <string name="block_unlock">Ouvrir</string>
+    <string name="block_back">Retour</string>
+    <string name="block_pin_empty">Saisis d\'abord le code PIN</string>
+    <string name="block_wrong_pin">Code PIN incorrect</string>
+    <string name="block_locked_out">Trop de tentatives. Patiente %1$d secondes.</string>
+</resources>
