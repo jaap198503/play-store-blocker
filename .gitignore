@@ -1,6 +1,8 @@
-# Lokale configuratie: pincode-hash en SDK-pad horen niet in git
-blocker.properties
+# Lokale configuratie: SDK-pad en ondertekeningssleutel horen niet in git
 local.properties
+keystore.properties
+*.jks
+*.keystore
 
 # Gradle / Android
 .gradle/

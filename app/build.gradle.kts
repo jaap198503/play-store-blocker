@@ -6,21 +6,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-// Pincode-hash, salt en ontgrendelduur komen uit blocker.properties (niet in git).
-// Aanmaken of wijzigen: tools/New-PinHash.ps1
-val blocker = Properties().apply {
-    val file = rootProject.file("blocker.properties")
-    if (!file.exists()) {
-        throw GradleException(
-            "blocker.properties ontbreekt. Maak het aan met: powershell -File tools/New-PinHash.ps1"
-        )
-    }
-    file.inputStream().use { load(it) }
+// Release-ondertekening: keystore.properties staat lokaal en niet in git (zie README).
+// Zonder dat bestand bouwt `assembleRelease` een niet-ondertekend APK.
+val keystoreProps = Properties().apply {
+    val file = rootProject.file("keystore.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
 }
-
-fun blockerProp(key: String): String =
-    blocker.getProperty(key)?.trim()?.takeIf { it.isNotEmpty() }
-        ?: throw GradleException("blocker.properties mist de sleutel '$key'.")
 
 android {
     namespace = "nl.playstoreblocker"
@@ -32,16 +23,27 @@ android {
         minSdk = 33
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1"
-
-        buildConfigField("String", "PIN_SALT", "\"${blockerProp("pinSalt")}\"")
-        buildConfigField("String", "PIN_HASH", "\"${blockerProp("pinHash")}\"")
-        buildConfigField("int", "PIN_ITERATIONS", blockerProp("pinIterations"))
-        buildConfigField("int", "UNLOCK_MINUTES", blockerProp("unlockMinutes"))
+        versionName = "1.0.0"
     }
 
-    buildFeatures {
-        buildConfig = true
+    signingConfigs {
+        if (keystoreProps.isNotEmpty()) {
+            create("release") {
+                storeFile = file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            if (keystoreProps.isNotEmpty()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+        }
     }
 
     compileOptions {

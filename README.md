@@ -1,188 +1,163 @@
-# Play Store-slot
+# Play Store Lock
 
-Android-app (Kotlin) die de Google Play Store op een kindertablet **altijd blokkeert**. Alleen na invoer van een pincode gaat de Play Store tijdelijk open (standaard 10 minuten), daarna sluit hij weer.
+**English** · [Nederlands](README.nl.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Español](README.es.md)
 
-Gebouwd voor een Samsung Galaxy Tab A9 met een Family Link-kinderaccount. Family Link kan de Play Store zelf niet blokkeren, daarom doet deze app dat.
+An Android app that **always blocks** the Google Play Store on a child's tablet. Only after a parent enters a PIN code does the Play Store open temporarily (10 minutes by default, or the number of minutes the parent chooses), after which it closes again.
 
-> Dit is **afschrikking, geen harde beveiliging**. Een handige tiener kan de service uitzetten of de app verwijderen. Zie [Beperkingen](#beperkingen).
+Built for a Samsung Galaxy Tab A9 with a Google Family Link child account. Family Link cannot block the Play Store itself, so this app does it.
 
-## Hoe het werkt
+> This is **a deterrent, not hard security**. A resourceful teenager can switch off the service or uninstall the app. See [Limitations](#limitations).
 
-- Een `AccessibilityService` luistert naar `TYPE_WINDOW_STATE_CHANGED`. Komt `com.android.vending` voorop en is er geen actief ontgrendelvenster, dan gaat de tablet naar het startscherm en verschijnt een pincodescherm.
-- Op het pincodescherm staat ook een veld **Aantal minuten** (standaard 10, maximaal 180). Het kind vraagt om een aantal minuten, de ouder vult dat in en voert de pincode in. Een leeg of ongeldig veld valt terug op de standaard.
-- Pincode goed: de Play Store start en het ontgrendelvenster loopt voor het ingevulde aantal minuten. Het venster gebruikt `SystemClock.elapsedRealtime()` plus de boot-teller, dus klok verzetten of herstarten helpt niet om het te verlengen.
-- Na afloop van het venster controleert de service wat voorop staat en sluit de Play Store als dat nog nodig is.
-- Na 5 foute pogingen volgt een wachttijd die steeds verdubbelt (30 s tot maximaal 10 min).
-- De pincode staat nergens. In de app zit alleen een salted PBKDF2-hash (SHA-256, 120.000 iteraties).
-- **Talen:** de app volgt automatisch de taal van de tablet. De standaardtaal is Engels. Vertalingen zijn er voor Nederlands, Duits, Frans en Spaans. In de teststappen hieronder staan de Nederlandse teksten; op een Engelstalige tablet zie je de Engelse (bijvoorbeeld "Open" in plaats van "Openen").
-- De app heeft geen icoon in het appscherm. Je vindt hem onder Instellingen > Toegankelijkheid en onder Instellingen > Apps.
+## Download
 
-## Indeling
+**[⬇ Download the APK (play-store-lock.apk)](https://github.com/jaap198503/play-store-blocker/releases/latest/download/play-store-lock.apk)** · [all releases and checksums](https://github.com/jaap198503/play-store-blocker/releases)
+
+Requires Android 13 or newer. The APK is signed with the project's own key and is not distributed through the Play Store. To verify the download, compare its SHA-256 with the one on the release page:
+
+```powershell
+Get-FileHash .\play-store-lock.apk -Algorithm SHA256
+```
+
+## Install on the tablet
+
+Do this as the parent, on the child's tablet. No laptop is needed. (Prefer a laptop? See [Install via USB](#install-via-usb-adb).)
+
+1. **Turn off Auto Blocker.** Go to Settings > Security and privacy > Auto Blocker and switch it off. It blocks installs from outside the Play Store. (You can switch it back on in step 7.)
+2. **Download and install the APK.** Open the download link above in the tablet's browser. Open the downloaded file. If asked, allow the browser to **install unknown apps** and tap **Install**. If Play Protect warns about an unknown developer, choose **More details > Install anyway**.
+3. **Set the PIN.** Open the **Play Store Lock** app (lock icon). The first time you land in **Settings** automatically. Choose a PIN of 4 to 12 digits, repeat it, optionally change the default number of minutes, and tap **Save**. Nothing is blocked until a PIN is set.
+4. **Turn on the accessibility service.** In the app tap **Open accessibility settings**. Go to Installed apps > **Play Store Lock** and switch the service on. Confirm the warning.
+   - Greyed out, or a **Restricted setting** message? Go to Settings > Apps > **Play Store Lock**, tap ⋮ at the top right and choose **Allow restricted settings**. Then try again. (This appears because the app was installed from outside the Play Store.)
+5. **Set the battery to unrestricted.** In the app tap **App settings**, open Battery and choose **Unrestricted**. Otherwise Samsung stops the service after a while. Optionally add the app under Settings > Battery > Background usage limits > Never sleeping apps.
+6. **Test it.**
+   1. Open the **Play Store**. You go straight to the home screen and the screen "The Play Store is closed" appears.
+   2. Type a wrong PIN and tap **Open**. You see "Incorrect PIN code".
+   3. Check the **Number of minutes** field (default 10). Use 1 or 2 for a quick test.
+   4. Type the correct PIN. The Play Store opens.
+   5. After the chosen number of minutes it should close by itself and the PIN screen should appear again.
+   6. Optional: type a wrong PIN 5 times. You get "Too many attempts. Wait 30 seconds."
+7. **Finish.** Switch Auto Blocker back on. After a restart of the tablet, check in the app that the PIN and the service are still shown as on.
+
+### How a child asks for time
+
+The child opens the Play Store and sees the PIN screen. They ask for a number of minutes, the parent types that number in the **Number of minutes** field and enters the PIN. The Play Store then stays open for exactly that long. It also works the other way round: the parent opens the **Play Store Lock** app itself. Its main screen is the same screen (**Give temporary access**), so you can hand out time without the child opening the Play Store first.
+
+### Changing the PIN or default minutes
+
+Open the app and tap **Settings**. It asks for the current PIN, so only the parent can change anything. Fill in a new PIN twice to change the PIN, or leave the new PIN empty to change only the default number of minutes.
+
+## Install via USB (adb)
+
+An alternative to installing on the tablet itself, useful for rolling out to several tablets.
+
+1. Prepare the laptop with `adb` (Android SDK platform-tools).
+2. On the tablet turn on Developer options (Settings > About tablet > Software information, tap **Build number** 7 times) and **USB debugging** (Settings > Developer options). If the switch jumps back, a Family Link child account may be blocking it: do it under the parent profile or temporarily allow it in Family Link.
+3. Connect the tablet with a data-capable USB cable. Choose **File transfer** on the tablet and tap **Allow** on the "Allow USB debugging?" prompt (choose "Always allow from this computer").
+4. Check that the tablet shows as `device`:
+   ```powershell
+   adb devices -l
+   ```
+   Empty list: try another cable or port and install the Samsung USB driver. Status `unauthorized`: confirm the prompt on the tablet. Several devices: add `-s <serial number>` to every `adb` command.
+5. Install the downloaded APK:
+   ```powershell
+   adb install -r .\play-store-lock.apk
+   ```
+6. Continue with steps 3 to 7 above (set the PIN, turn on the service, battery, test, finish). Switch USB debugging off again afterwards.
+
+The menu paths in this README are for Samsung One UI. Names can differ slightly per version and per tablet language.
+
+## How it works
+
+- An `AccessibilityService` listens for `TYPE_WINDOW_STATE_CHANGED`. When `com.android.vending` comes to the front and no unlock window is active, the tablet goes to the home screen and a PIN screen appears.
+- Correct PIN: the Play Store starts and the unlock window runs for the entered number of minutes (1 to 180). The window uses `SystemClock.elapsedRealtime()` plus the boot counter, so changing the clock or rebooting does not extend it.
+- When the window ends, the service checks what is in the foreground and closes the Play Store if needed.
+- After 5 wrong attempts a waiting time applies that doubles each time (30 s up to 10 min).
+- The PIN is set on the device and stored nowhere in readable form: only a salted PBKDF2 hash (SHA-256, 120,000 iterations) in the app's private storage. The APK itself contains no PIN.
+- Until a PIN is set, nothing is blocked (nobody could unlock it).
+- The app follows the tablet's language automatically. The default is English. Translations: Dutch, German, French and Spanish.
+
+## For developers
 
 ```
 app/src/main/java/nl/playstoreblocker/
-  BlockerAccessibilityService.kt   blokkeert en bewaakt het venster
-  BlockActivity.kt                 pincodescherm
-  UnlockState.kt                   ontgrendelvenster (elapsedRealtime + boot-teller)
-  PinVerifier.kt                   PBKDF2-controle tegen BuildConfig
-  PinAttempts.kt                   wachttijd na foute pogingen
-  Config.kt                        geblokkeerde pakketten, duur
-tools/New-PinHash.ps1              maakt blocker.properties (pincode-hash)
-tools/env.ps1                      zet JDK, SDK, adb en Gradle in je PowerShell-sessie
-blocker.properties                 lokaal, NIET in git: salt, hash, duur
-local.properties                   lokaal, NIET in git: pad naar de Android SDK
-OVERDRACHT.md                      oorspronkelijke ontwerpnotitie
+  MainActivity.kt                  launcher screen: give temporary access (PIN + minutes)
+  SettingsActivity.kt              settings: status, set/change the PIN
+  BlockerAccessibilityService.kt   blocks and watches the unlock window
+  BlockActivity.kt                 PIN screen
+  PinStore.kt                      salted PBKDF2 hash and default minutes (on the device)
+  UnlockState.kt                   unlock window (elapsedRealtime + boot counter)
+  PinAttempts.kt                   waiting time after wrong attempts
+  Config.kt                        blocked packages, limits
+tools/env.ps1                      puts JDK, SDK, adb and Gradle in your PowerShell session
+local.properties                   local, NOT in git: path to the Android SDK
+keystore.properties                local, NOT in git: release signing key
 ```
 
-## Eenmalig: de laptop klaarzetten
+### Set up the build environment (once)
 
-Je hebt nodig: **JDK 17**, de **Android SDK** (platform-tools met `adb`, `platforms;android-35`, `build-tools;34.0.0`) en Gradle. De wrapper (`gradlew.bat`) haalt Gradle 8.9 zelf op.
+You need **JDK 17**, the **Android SDK** (platform-tools with `adb`, `platforms;android-35`, `build-tools;34.0.0`) and Gradle (the wrapper `gradlew.bat` fetches Gradle 8.9 itself).
 
-Op de ontwikkellaptop staat alles in `C:\Users\JaapScheper\android-tools` (`jdk17`, `sdk`, `gradle-8.9`). Op een andere laptop:
-
-1. Installeer JDK 17 (bijvoorbeeld Temurin) en de Android SDK command-line tools, of Android Studio.
-2. Accepteer de SDK-licenties en installeer de pakketten:
+1. Install JDK 17 (for example Temurin) and the Android SDK command-line tools, or Android Studio.
+2. Accept the SDK licenses and install the packages:
    ```powershell
    sdkmanager --licenses
    sdkmanager "platform-tools" "platforms;android-35" "build-tools;34.0.0"
    ```
-3. Maak `local.properties` in de projectmap met het pad naar je SDK:
+3. Create `local.properties` in the project folder:
    ```
-   sdk.dir=C\:\\Pad\\naar\\sdk
+   sdk.dir=C\:\\Path\\to\\sdk
    ```
-4. Pas de paden in `tools/env.ps1` aan en laad het in elke nieuwe PowerShell-sessie (let op de punt en spatie vooraan):
+4. Adjust the paths in `tools/env.ps1` if needed and load it in every new PowerShell session (note the dot and space at the start):
    ```powershell
    . .\tools\env.ps1
    ```
-5. Maak `blocker.properties` met je pincode (zie hieronder).
 
-## Een taal toevoegen
+### Build
 
-Alle teksten staan in `app/src/main/res/values/strings.xml` (Engels, de standaard). Kopieer dat bestand naar `app/src/main/res/values-<taalcode>/strings.xml` (bijvoorbeeld `values-it` voor Italiaans), vertaal de waarden en laat de namen ongewijzigd. Houd `%1$d` en `\'` zoals ze staan. Bouw en installeer opnieuw; Android kiest zelf de taal van de tablet en valt terug op Engels als een taal ontbreekt. Bij Samsung-tablets is de Service-naam onder Toegankelijkheid ook vertaald.
-
-## Pincode of standaardduur wijzigen
-
-Open PowerShell in de projectmap en draai:
+Debug build, installed straight onto connected tablets:
 
 ```powershell
-powershell -File tools/New-PinHash.ps1
-```
-
-Het script vraagt de pincode verborgen (4 tot 12 cijfers) en schrijft een nieuwe `blocker.properties`. Een andere **standaardduur** (de beginwaarde van het minutenveld) zet je met `-UnlockMinutes`:
-
-```powershell
-powershell -File tools/New-PinHash.ps1 -UnlockMinutes 15
-```
-
-Daarna opnieuw bouwen en installeren (zie hieronder). Een nieuwe pincode of duur geldt pas na het opnieuw installeren.
-
-## Bouwen en installeren
-
-```powershell
-. .\tools\env.ps1
 .\gradlew.bat installDebug
 ```
 
-`installDebug` installeert op alle aangesloten tablets. Het APK staat daarna in `app\build\outputs\apk\debug\app-debug.apk`.
+> **Note:** on the original development laptop Gradle did not work from inside Claude Code's own shell (Java selectors failed with "Unable to establish loopback connection"), but it did in a normal PowerShell or Terminal window. If you get that error, build in a normal terminal window.
 
-> **Let op:** op de ontwikkellaptop werkte Gradle niet vanuit Claude Code's eigen shell (Java-selectors faalden met "Unable to establish loopback connection"), maar wel in een gewoon PowerShell- of Terminal-venster. Krijg je die fout, bouw dan in een gewoon terminalvenster.
-
-Logs bekijken (tag `PSBlocker`):
+Watch the logs (tag `PSBlocker`):
 
 ```powershell
 adb logcat -s PSBlocker:V
 ```
 
-## Uitrol naar een andere tablet, van A tot Z
+### Release build
 
-Alle tablets krijgen dezelfde pincode en duur, namelijk die uit `blocker.properties` op het moment van bouwen. Wil je per tablet een andere pincode, bouw dan per tablet opnieuw.
-
-De menupaden hieronder horen bij Samsung One UI. Namen kunnen per versie iets verschillen.
-
-### 1. Tablet voorbereiden
-
-1. **Ontwikkelaarsopties aanzetten.** Ga naar Instellingen > Info over tablet > Softwaregegevens en tik 7 keer op **Buildnummer**. Voer zo nodig de schermvergrendeling in.
-2. **USB-foutopsporing aanzetten.** Ga naar Instellingen > Ontwikkelaarsopties en zet **USB-foutopsporing** aan.
-   - Springt de schakelaar terug of is hij grijs? Een Family Link-kinderaccount kan dit blokkeren. Doe de stappen dan onder het ouderprofiel, of sta het tijdelijk toe in Family Link.
-3. **Auto Blocker uitzetten.** Ga naar Instellingen > Beveiliging en privacy > Auto Blocker en zet hem uit. Hij blokkeert installaties van buiten de Play Store.
-
-### 2. Aansluiten via USB
-
-1. Sluit de tablet met een USB-kabel aan op de laptop. Gebruik een kabel die ook data doorgeeft, niet een laadkabel.
-2. Kies op de tablet bij de USB-melding **Bestanden overzetten**. Voor `adb` maakt de USB-modus niet uit, maar dit werkt betrouwbaar.
-3. Er verschijnt **USB-foutopsporing toestaan?** Kies **Altijd toestaan vanaf deze computer** en tik op **Toestaan**.
-4. Controleer op de laptop:
-   ```powershell
-   . .\tools\env.ps1
-   adb devices -l
-   ```
-   De tablet moet met status **`device`** in de lijst staan.
-   - Lege lijst: andere kabel of USB-poort proberen, USB-foutopsporing controleren en eventueel de Samsung USB-driver installeren. Kijk in Apparaatbeheer of de tablet een uitroepteken heeft.
-   - Status `unauthorized`: bevestig de toestemmingsmelding op de tablet.
-   - Meerdere apparaten aangesloten: gebruik `adb -s <serienummer>` bij elk `adb`-commando.
-
-### 3. App bouwen en installeren
-
-1. Zorg dat `blocker.properties` bestaat en de juiste pincode en duur bevat (zie [Pincode of duur wijzigen](#pincode-of-duur-wijzigen)).
-2. Installeer:
-   ```powershell
-   .\gradlew.bat installDebug
-   ```
-   Je ziet `Installed on 1 device.`
-
-   Alternatief voor meerdere tablets, zonder opnieuw te bouwen:
-   ```powershell
-   .\gradlew.bat assembleDebug
-   adb -s <serienummer> install -r app\build\outputs\apk\debug\app-debug.apk
-   ```
-
-### 4. Toegankelijkheidsservice aanzetten
-
-Dit moet je zelf op de tablet doen.
-
-1. Ga naar Instellingen > Toegankelijkheid > Geïnstalleerde apps > **Play Store-slot**.
-2. Zet de service aan en bevestig de waarschuwing.
-3. Is de schakelaar grijs of zie je **Beperkte instelling**? Ga naar Instellingen > Apps > **Play Store-slot**, tik rechtsboven op ⋮ en kies **Beperkte instellingen toestaan**. Probeer stap 1 en 2 daarna opnieuw.
-
-Controle vanaf de laptop:
+The release APK must be signed. Create a key once and keep it safe (if you lose it, existing installs can no longer be updated):
 
 ```powershell
-adb shell settings get secure enabled_accessibility_services
+keytool -genkeypair -keystore play-store-lock.jks -alias play-store-lock -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=Play Store Lock"
 ```
 
-Daar moet `nl.playstoreblocker/nl.playstoreblocker.BlockerAccessibilityService` in staan.
+Then create `keystore.properties` in the project folder (it is in `.gitignore`):
 
-### 5. Batterij op onbeperkt
+```
+storeFile=C\:\\Path\\to\\play-store-lock.jks
+storePassword=...
+keyAlias=play-store-lock
+keyPassword=...
+```
 
-Anders legt Samsung de service na verloop van tijd stil.
+```powershell
+.\gradlew.bat assembleRelease
+```
 
-1. Ga naar Instellingen > Apps > **Play Store-slot** > Batterij en kies **Onbeperkt**.
-2. Optioneel extra zeker: Instellingen > Batterij > Achtergrondlimieten > **Nooit slapende apps** en voeg Play Store-slot toe.
+The APK ends up in `app\build\outputs\apk\release\app-release.apk`. Debug and release builds use different keys, so uninstall one before installing the other.
 
-### 6. De pincode testen
+### Adding a language
 
-1. Open de **Play Store** op de tablet. Je gaat meteen naar het startscherm en het pincodescherm "De Play Store is dicht" verschijnt.
-2. Typ een **foute pincode** en tik op Openen. Je ziet "Onjuiste pincode".
-3. Controleer dat het veld **Aantal minuten** op de standaard staat (10). Pas het aan als je een andere duur wilt, bijvoorbeeld 2 voor een snelle test.
-4. Typ de **juiste pincode**. De Play Store gaat open.
-5. Laat de Play Store open voor het ingevulde aantal minuten. Daarna hoort hij zichzelf te sluiten en verschijnt het pincodescherm weer. Test dit met 1 of 2 minuten, dat scheelt wachttijd.
-6. Optioneel: controleer de wachttijd. Typ 5 keer een foute pincode. Je krijgt "Te vaak geprobeerd. Wacht 30 seconden."
+All texts are in `app/src/main/res/values/strings.xml` (English, the default). Copy that file to `app/src/main/res/values-<language code>/strings.xml` (for example `values-it` for Italian), translate the values and leave the names unchanged. Keep `%1$d` and `\'` as they are. Android picks the tablet's language itself and falls back to English. To translate this README too, copy it to `README.<code>.md` and add a link to the language line at the top.
 
-Meekijken kan met `adb logcat -s PSBlocker:V`. Je ziet regels als `blocking: window event from com.android.vending` en `unlock window expired`.
+## Limitations
 
-> Tijdens de eerste uitrol zijn het blokkeren en de juiste pincode getest. Het sluiten na afloop van het venster, het minutenveld en de wachttijd na 5 foute pogingen zijn nog niet op de tablet gecontroleerd, dus neem stap 3, 5 en 6 serieus mee.
-
-### 7. Afronden
-
-1. Zet **USB-foutopsporing** weer uit en eventueel de Ontwikkelaarsopties.
-2. Zet **Auto Blocker** weer aan.
-3. Koppel de tablet los.
-4. Controleer na een herstart van de tablet dat de service nog aan staat (stap 4) en de Play Store nog dicht is.
-
-## Beperkingen
-
-- **De service kan worden uitgezet.** Een kind kan Instellingen > Toegankelijkheid openen en de service uitzetten, of de app verwijderen. Of Family Link dat tegenhoudt, is niet getest.
-- **Geen Device Admin.** Verwijderen is daarom niet extra moeilijk gemaakt.
-- **Galaxy Store** (`com.sec.android.app.samsungapps`) is een tweede route om apps te installeren en wordt **niet** geblokkeerd. Voeg hem toe aan `BLOCKED_PACKAGES` in `Config.kt` als je dat wilt.
-- Het APK is met de debug-sleutel ondertekend. Prima voor eigen gebruik, niet bedoeld voor verspreiding.
-- Het APK bevat de salted hash van de pincode. Een korte numerieke pincode is met veel moeite uit het APK te herleiden.
+- **The service can be switched off.** A child can open Settings > Accessibility and switch the service off, or uninstall the app. Whether Family Link prevents that has not been tested.
+- **No Device Admin.** Uninstalling is therefore not made any harder.
+- **Galaxy Store** (`com.sec.android.app.samsungapps`) is a second way to install apps and is **not** blocked. Add it to `BLOCKED_PACKAGES` in `Config.kt` if you want that.
+- A short numeric PIN can be guessed by brute force by someone who can read the app's private storage (only possible on a rooted device). Use a longer PIN if that matters to you.
+- **Tested so far** on a Samsung Galaxy Tab A9 (Android 16): blocking, entering the correct PIN and opening the Play Store. Closing after the window ends, the waiting time after 5 wrong attempts and the other languages have not been verified on a device yet.

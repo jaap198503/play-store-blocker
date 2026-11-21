@@ -13,4 +13,29 @@
     <string name="block_pin_empty">Vul eerst de pincode in</string>
     <string name="block_wrong_pin">Onjuiste pincode</string>
     <string name="block_locked_out">Te vaak geprobeerd. Wacht %1$d seconden.</string>
+
+    <string name="setup_intro">Stel een pincode in en zet daarna de service aan onder Toegankelijkheid. Daarna blijft de Play Store dicht, tenzij een ouder de pincode invoert.</string>
+    <string name="setup_status_pin_set">Pincode: ingesteld</string>
+    <string name="setup_status_pin_missing">Pincode: nog niet ingesteld</string>
+    <string name="setup_status_service_on">Blokkadeservice: aan</string>
+    <string name="setup_status_service_off">Blokkadeservice: uit</string>
+    <string name="setup_open_accessibility">Toegankelijkheidsinstellingen openen</string>
+    <string name="setup_open_app_settings">App-instellingen (zet batterij op onbeperkt)</string>
+    <string name="setup_section_set">Pincode instellen</string>
+    <string name="setup_section_change">Pincode of standaardminuten wijzigen</string>
+    <string name="setup_current_pin_hint">Huidige pincode</string>
+    <string name="setup_new_pin_hint">Nieuwe pincode (4 tot 12 cijfers)</string>
+    <string name="setup_confirm_pin_hint">Herhaal nieuwe pincode</string>
+    <string name="setup_default_minutes_label">Standaard aantal minuten (1 tot 180)</string>
+    <string name="setup_save">Opslaan</string>
+    <string name="setup_error_pin_format">De pincode moet uit 4 tot 12 cijfers bestaan</string>
+    <string name="setup_error_mismatch">De pincodes komen niet overeen</string>
+    <string name="setup_error_current_wrong">Huidige pincode is onjuist</string>
+    <string name="setup_saved">Opgeslagen</string>
+
+    <string name="main_title">Tijdelijk toegang geven</string>
+    <string name="main_subtitle">Voer de pincode en het aantal minuten in om de Play Store te openen.</string>
+    <string name="main_settings">Instellingen</string>
+    <string name="main_no_pin">Stel eerst een pincode in bij Instellingen</string>
+    <string name="settings_title">Instellingen</string>
 </resources>

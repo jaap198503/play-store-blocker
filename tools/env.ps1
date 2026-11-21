@@ -2,8 +2,11 @@
 .SYNOPSIS
   Zet JDK 17, Android SDK, adb en Gradle in deze PowerShell-sessie.
   Gebruik:  . .\tools\env.ps1     (let op de punt + spatie vooraan)
+
+  Standaard zoekt het in %USERPROFILE%\android-tools. Wijzig $toolsRoot als jouw tools elders staan,
+  of zet de omgevingsvariabele ANDROID_TOOLS_ROOT.
 #>
-$toolsRoot = 'C:\Users\JaapScheper\android-tools'
+$toolsRoot = if ($env:ANDROID_TOOLS_ROOT) { $env:ANDROID_TOOLS_ROOT } else { Join-Path $env:USERPROFILE 'android-tools' }
 
 $env:JAVA_HOME        = Join-Path $toolsRoot 'jdk17'
 $env:ANDROID_HOME     = Join-Path $toolsRoot 'sdk'

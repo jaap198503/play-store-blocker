@@ -13,4 +13,29 @@
     <string name="block_pin_empty">Gib zuerst den PIN-Code ein</string>
     <string name="block_wrong_pin">Falscher PIN-Code</string>
     <string name="block_locked_out">Zu viele Versuche. Bitte %1$d Sekunden warten.</string>
+
+    <string name="setup_intro">Lege einen PIN-Code fest und schalte danach den Dienst unter Bedienungshilfen ein. Danach bleibt der Play Store gesperrt, außer ein Elternteil gibt den PIN-Code ein.</string>
+    <string name="setup_status_pin_set">PIN-Code: festgelegt</string>
+    <string name="setup_status_pin_missing">PIN-Code: noch nicht festgelegt</string>
+    <string name="setup_status_service_on">Sperrdienst: ein</string>
+    <string name="setup_status_service_off">Sperrdienst: aus</string>
+    <string name="setup_open_accessibility">Einstellungen für Bedienungshilfen öffnen</string>
+    <string name="setup_open_app_settings">App-Einstellungen (Akku auf unbeschränkt stellen)</string>
+    <string name="setup_section_set">PIN-Code festlegen</string>
+    <string name="setup_section_change">PIN-Code oder Standardminuten ändern</string>
+    <string name="setup_current_pin_hint">Aktueller PIN-Code</string>
+    <string name="setup_new_pin_hint">Neuer PIN-Code (4 bis 12 Ziffern)</string>
+    <string name="setup_confirm_pin_hint">Neuen PIN-Code wiederholen</string>
+    <string name="setup_default_minutes_label">Standardanzahl Minuten (1 bis 180)</string>
+    <string name="setup_save">Speichern</string>
+    <string name="setup_error_pin_format">Der PIN-Code muss aus 4 bis 12 Ziffern bestehen</string>
+    <string name="setup_error_mismatch">Die PIN-Codes stimmen nicht überein</string>
+    <string name="setup_error_current_wrong">Aktueller PIN-Code ist falsch</string>
+    <string name="setup_saved">Gespeichert</string>
+
+    <string name="main_title">Vorübergehend Zugriff geben</string>
+    <string name="main_subtitle">Gib den PIN-Code und die Anzahl Minuten ein, um den Play Store zu öffnen.</string>
+    <string name="main_settings">Einstellungen</string>
+    <string name="main_no_pin">Lege zuerst unter Einstellungen einen PIN-Code fest</string>
+    <string name="settings_title">Einstellungen</string>
 </resources>

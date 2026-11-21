@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hangslot, binnen de veilige zone (middelste 66 van 108 dp) van een adaptief icoon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,50 h32 a4,4 0 0 1 4,4 v22 a4,4 0 0 1 -4,4 h-32 a4,4 0 0 1 -4,-4 v-22 a4,4 0 0 1 4,-4 z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M43,50 v-8 a11,11 0 0 1 22,0 v8"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5" />
+</vector>

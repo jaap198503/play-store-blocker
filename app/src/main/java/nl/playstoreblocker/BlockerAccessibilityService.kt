@@ -24,7 +24,7 @@ class BlockerAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
-        Log.i(TAG, "service connected; default unlock window = ${Config.DEFAULT_UNLOCK_MINUTES} min")
+        Log.i(TAG, "service connected; pin set = ${PinStore.isSet(this)}")
         // De service kan herstarten terwijl een ontgrendelvenster nog loopt.
         scheduleExpiryCheck()
     }
@@ -35,6 +35,11 @@ class BlockerAccessibilityService : AccessibilityService() {
         Log.d(TAG, "window: $pkg / ${event.className}")
 
         if (pkg in Config.BLOCKED_PACKAGES && !UnlockState.isUnlocked(this)) {
+            // Zonder ingestelde pincode kan niemand ontgrendelen: dan blokkeren we nog niet.
+            if (!PinStore.isSet(this)) {
+                Log.w(TAG, "no pin set yet; not blocking (open the app to set one)")
+                return
+            }
             block("window event from $pkg")
         }
     }
@@ -75,7 +80,8 @@ class BlockerAccessibilityService : AccessibilityService() {
         val foreground = rootInActiveWindow?.packageName?.toString()
         Log.i(TAG, "unlock window expired; foreground=$foreground")
         when {
-            foreground != null && foreground in Config.BLOCKED_PACKAGES -> block("unlock window expired")
+            foreground != null && foreground in Config.BLOCKED_PACKAGES && PinStore.isSet(this) ->
+                block("unlock window expired")
             foreground == null && expiryRetries < MAX_EXPIRY_RETRIES -> {
                 expiryRetries++
                 handler.postDelayed(expiryCheck, EXPIRY_RETRY_MS)

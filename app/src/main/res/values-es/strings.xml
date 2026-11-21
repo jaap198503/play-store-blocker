@@ -13,4 +13,29 @@
     <string name="block_pin_empty">Introduce primero el código PIN</string>
     <string name="block_wrong_pin">Código PIN incorrecto</string>
     <string name="block_locked_out">Demasiados intentos. Espera %1$d segundos.</string>
+
+    <string name="setup_intro">Establece un código PIN y activa después el servicio en Accesibilidad. Luego Play Store seguirá cerrada, salvo que un padre o una madre introduzca el PIN.</string>
+    <string name="setup_status_pin_set">Código PIN: establecido</string>
+    <string name="setup_status_pin_missing">Código PIN: aún no establecido</string>
+    <string name="setup_status_service_on">Servicio de bloqueo: activado</string>
+    <string name="setup_status_service_off">Servicio de bloqueo: desactivado</string>
+    <string name="setup_open_accessibility">Abrir ajustes de accesibilidad</string>
+    <string name="setup_open_app_settings">Ajustes de la app (batería: sin restricciones)</string>
+    <string name="setup_section_set">Establecer un código PIN</string>
+    <string name="setup_section_change">Cambiar el PIN o los minutos predeterminados</string>
+    <string name="setup_current_pin_hint">PIN actual</string>
+    <string name="setup_new_pin_hint">PIN nuevo (de 4 a 12 dígitos)</string>
+    <string name="setup_confirm_pin_hint">Repite el PIN nuevo</string>
+    <string name="setup_default_minutes_label">Número de minutos predeterminado (1 a 180)</string>
+    <string name="setup_save">Guardar</string>
+    <string name="setup_error_pin_format">El PIN debe tener de 4 a 12 dígitos</string>
+    <string name="setup_error_mismatch">Los PIN no coinciden</string>
+    <string name="setup_error_current_wrong">El PIN actual es incorrecto</string>
+    <string name="setup_saved">Guardado</string>
+
+    <string name="main_title">Dar acceso temporal</string>
+    <string name="main_subtitle">Introduce el PIN y el número de minutos para abrir Play Store.</string>
+    <string name="main_settings">Ajustes</string>
+    <string name="main_no_pin">Establece primero un PIN en Ajustes</string>
+    <string name="settings_title">Ajustes</string>
 </resources>
